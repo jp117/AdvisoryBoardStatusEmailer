@@ -7,7 +7,7 @@ workbook = openpyxl.load_workbook('AdvisoryBoardTracking.xlsx')
 newSub = workbook['NewSubmissions']
 pendingSub = workbook['PendingReSubmissions']
 
-#Finds all the rows in the sheet to search data for
+#Finds next row in sheet
 def nextrow(sheet):
 	i = 1
 	row = sheet.cell(row=i, column=1).value
@@ -21,10 +21,10 @@ def newSubList(sheet):
 	datalistoflist = []
 	i = 2
 	for i in range (i, nextrow(sheet)):
-		data = sheet.cell(row=i, column=14).value
-		if data == None:
+		data = sheet.cell(row=i, column=13).value
+		if data == None or data.lower() != "yes":
 			datalist = []
-			for x in range (1,14):
+			for x in range (1,15):
 				datalist.append(sheet.cell(row=i, column=x).value)
 			datalistoflist.append(datalist)
 	return datalistoflist
@@ -35,17 +35,64 @@ def pendingSubList(sheet):
 	i = 2
 	for i in range (i, nextrow(sheet)):
 		data = sheet.cell(row=i, column=10).value
-		if data == None or data.lower != "yes":
+		if data == None or data.lower() != "yes":
 			datalist = []
-			for x in range (1,10):
+			for x in range (1,11):
 				datalist.append(sheet.cell(row=i, column=x).value)
 			datalistoflist.append(datalist)
 		return datalistoflist
 
-#Makes the string that will be emailed to the salesmen
-def salesmanEmailBody():
+#Assembles the email body for submission 
+def salesmanNewSubBody():
 	i = len(newSubList(newSub))
-	for x in range (x, i)
+	subbody = """\
+<html>
+	<head>
+		<style>
+			p {
+				margin: 0px;
+				padding: 0px;
+			}
+			#01 {
+				font-size: 1.2em
+			}
+		</style>
+	</head>
+		<body>
+<p><span id="01"><b>This is an update of our new submissions to the advisory board</b>.</span><br />
+If you have a job that is not listed that needs to be submitted, please email John or Gina so that it can be added to the list.<br />
+Please include the SO#, Job Name, Location, Contractor Name and Contractor Address.<br />
+If there is a problem with the target submission date, please let Gina or John know so the schedule can be adjusted.<br />
+If a submission number is needed, Gina or John will request it.<br />
+If a check and letter is needed, please see engineering for the drawing # and request the check and letter for your job.<br /><br /></p>
+"""
+	for x in range (0, i):
+		subbody += "<b>SO#: " + str(newSubList(newSub)[x][0]) + "</b><br />"
+		subbody += "Contractor: " + str(newSubList(newSub)[x][1]) + "<br />"
+		if newSubList(newSub)[x][2] == None:
+			subbody += "Job: " + str(newSubList(newSub)[x][3]) + "<br />"
+		else:
+			subbody += "Job: " + str(newSubList(newSub)[x][2]) + " at " + str(newSubList(newSub)[x][3]) + "<br />"
+		if newSubList(newSub)[x][4] == None:
+			subbody += "Sub#: REQUEST SUBMISSION NUMBER" + "<br />"
+		else:
+			subbody += "Sub#: " + str(newSubList(newSub)[x][4]) + "<br />"
+		if newSubList(newSub)[x][5] == None or newSubList(newSub)[x][5].lower() == "no":
+			subbody += "Check and Letter: REQUEST CHECK AND LETTER" + "<br />"
+		elif newSubList(newSub)[x][5].lower() == "yes":
+			subbody += "Check and Letter: Recieved<br />"
+		else:
+			subbody += "Check and Letter: " + str(newSubList(newSub)[x][5]) + "<br />"
+		if newSubList(newSub)[x][7] != None:
+			subbody += "Target Meeting: " + str(newSubList(newSub)[x][7]) + "<br />"
+		else:
+			subbody += "No target meeting set <br />"
+		subbody += "Salesman: " + str(newSubList(newSub)[x][9]) + "<br />"
+		subbody += "Engineer: " + str(newSubList(newSub)[x][8]) + '<br /><br />'
+	subbody += "</body></html>"
+	return subbody
+
+
 
 #Code below accesses any piece of the list of lists that i need.  First is list of lists index number, second is the inside list index number
 #print (newSubList(newSub)[0][1])

@@ -8,6 +8,10 @@ from oauth2client import tools
 from oauth2client.file import Storage
 import send_email
 import ABSpreadsheet
+import base64
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+import mimetypes
 
 try:
     import argparse
@@ -42,7 +46,7 @@ sendInst = send_email.send_email(service)
 sender = "john@atlasswitch.com"
 recepientList = "john.paradise117@gmail.com" #add people with semicolon bewteen ";"
 subject = "Advisory Board Email Update " + sendDate #Maybe add date sent to this string for tracking
-emailbody = "This is the email body" #Logic to loop through spreadsheet and make email
+emailbody = ABSpreadsheet.salesmanNewSubBody()#Logic to loop through spreadsheet and make email
 
 #assembling the email to send
 message = sendInst.create_message(sender,recepientList, subject, emailbody)
