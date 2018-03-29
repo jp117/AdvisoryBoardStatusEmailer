@@ -4,6 +4,7 @@ import datetime
 
 #When I move the spreadsheet to the server, change the working directory to where the spreadsheet is stored
 #os.chdir('c:\\users\\John Paradise\\MyPythonScripts\\AdvisoryBoard')
+#decided to just leave the whole program on the server so no reason to move the spreadsheet
 
 workbook = openpyxl.load_workbook('AdvisoryBoardTracking.xlsx')
 newSub = workbook['NewSubmissions']
@@ -108,22 +109,25 @@ def EmailPendingSubBody():
 	i = len(pendingSubList(pendingSub))
 	subbody = EmailNewSubBody()
 	subbody += "<b>PENDING SUBMISSIONS BELOW</b><br /><br />"
-	for x in range (0,i):
-		subbody += "<b>SO#: " + str(pendingSubList(pendingSub)[x][0]) + "</b><br />"
-		subbody += "Contractor: " + str(pendingSubList(pendingSub)[x][1]) + "<br />"
-		if pendingSubList(pendingSub)[x][2] == None:
-			subbody += "Job " + str(pendingSubList(pendingSub)[x][3]) + '<br />'
-		elif pendingSubList(pendingSub)[x][3] == None:
-			subbody += "Job " + str(pendingSubList(pendingSub)[x][2]) + '<br />'
-		else:
-			subbody += "Job " + str(pendingSubList(pendingSub)[x][2]) + " at " + str(pendingSubList(pendingSub)[x][3]) + "<br />"
-		subbody += "Sub #: " + str(pendingSubList(pendingSub)[x][4]) + '<br />'
-		subbody += "Advisory Board Meeting Submitted: " + str(pendingSubList(pendingSub)[x][11]) + "<br />"
-		subbody += "Salesman: " + str(pendingSubList(pendingSub)[x][6]) + '<br />'
-		subbody += "Engineer: " + str(pendingSubList(pendingSub)[x][5]) + '<br />'
-		if pendingSubList(pendingSub)[x][8] == None or pendingSubList(pendingSub)[x][8].lower() != "yes":
-			subbody += "Not ready to resubmit yet<br />"
-		else:
-			subbody += "READY TO RESUBMIT<br />"
+	if nextrow(pendingSub) == 2:
+		subbody += "No pending jobs awaiting resubmittal that we are aware of"
+	else:
+		for x in range (0,i):
+			subbody += "<b>SO#: " + str(pendingSubList(pendingSub)[x][0]) + "</b><br />"
+			subbody += "Contractor: " + str(pendingSubList(pendingSub)[x][1]) + "<br />"
+			if pendingSubList(pendingSub)[x][2] == None:
+				subbody += "Job " + str(pendingSubList(pendingSub)[x][3]) + '<br />'
+			elif pendingSubList(pendingSub)[x][3] == None:
+				subbody += "Job " + str(pendingSubList(pendingSub)[x][2]) + '<br />'
+			else:
+				subbody += "Job " + str(pendingSubList(pendingSub)[x][2]) + " at " + str(pendingSubList(pendingSub)[x][3]) + "<br />"
+			subbody += "Sub #: " + str(pendingSubList(pendingSub)[x][4]) + '<br />'
+			subbody += "Advisory Board Meeting Submitted: " + str(pendingSubList(pendingSub)[x][11]) + "<br />"
+			subbody += "Salesman: " + str(pendingSubList(pendingSub)[x][6]) + '<br />'
+			subbody += "Engineer: " + str(pendingSubList(pendingSub)[x][5]) + '<br />'
+			if pendingSubList(pendingSub)[x][8] == None or pendingSubList(pendingSub)[x][8].lower() != "yes":
+				subbody += "Not ready to resubmit yet<br /><br />"
+			else:
+				subbody += "READY TO RESUBMIT<br /><br />"
 		subbody += "<br /></body></html>"
 	return subbody
