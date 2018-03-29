@@ -44,8 +44,8 @@ sendDate = datetime.datetime.now().strftime('%m/%d/%Y')
 
 sendInst = send_email.send_email(service)
 sender = "john@atlasswitch.com"
-recepientList = "john.paradise117@gmail.com" #Test recepient
-#recepientList = "gina@atlasswitch.com; harris@atlasswitch.com; matthew@atlasswitch.com; steve@atlasswitch.com; paul@atlasswitch.com; fred@atlasswitch.com; javier@atlasswitch.com; billy@atlasswitch.com; chad@atlasswitch.com; john@atlasswitch.com; barry@atlasswitch.com" 
+#recepientList = "john.paradise117@gmail.com" #Test recepient
+recepientList = "gina@atlasswitch.com; harris@atlasswitch.com; matthew@atlasswitch.com; steve@atlasswitch.com; paul@atlasswitch.com; fred@atlasswitch.com; javier@atlasswitch.com; billy@atlasswitch.com; chad@atlasswitch.com; john@atlasswitch.com; barry@atlasswitch.com" 
 subject = "Advisory Board Email Update " + sendDate
 emailbody = ABSpreadsheet.EmailPendingSubBody()#Logic to loop through spreadsheet and make email
 
