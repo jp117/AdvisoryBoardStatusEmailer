@@ -44,9 +44,8 @@ sendDate = datetime.datetime.now().strftime('%m/%d/%Y')
 
 sendInst = send_email.send_email(service)
 sender = "john@atlasswitch.com"
-recepientList = "john.paradise117@gmail.com" #add people with semicolon bewteen ";"
-subject = "Advisory Board Email Update " + sendDate #Maybe add date sent to this string for tracking
-emailbody = ABSpreadsheet.salesmanNewSubBody()#Logic to loop through spreadsheet and make email
+recepientList = "gina@atlasswitch.com; harris@atlasswitch.com; matthew@atlasswitch.com; steve@atlasswitch.com; paul@atlasswitch.com; fred@atlasswitch.com; javier@atlasswitch.com; billy@atlasswitch.com; chad@atlasswitch.com; john@atlasswitch.com" 
+emailbody = ABSpreadsheet.EmailPendingSubBody()#Logic to loop through spreadsheet and make email
 
 #assembling the email to send
 message = sendInst.create_message(sender,recepientList, subject, emailbody)

@@ -19,6 +19,7 @@ def nextrow(sheet):
 		row = sheet.cell(row=i, column=1).value
 	return i
 
+#finds the next Advisory Board meeting
 def nextmeeting():
 	today = datetime.datetime.now().strftime('%m/%d/%Y')
 	i = 1
@@ -49,13 +50,13 @@ def pendingSubList(sheet):
 		data = sheet.cell(row=i, column=10).value
 		if data == None or data.lower() != "yes":
 			datalist = []
-			for x in range (1,11):
+			for x in range (1,13):
 				datalist.append(sheet.cell(row=i, column=x).value)
 			datalistoflist.append(datalist)
-		return datalistoflist
+	return datalistoflist
 
-#Assembles the email body for submission 
-def salesmanNewSubBody():
+#Assembles the email body for submission from NewSubmission worksheet
+def EmailNewSubBody():
 	i = len(newSubList(newSub))
 	subbody = """\
 <html>
@@ -64,12 +65,10 @@ def salesmanNewSubBody():
 		<body>
 <p><span id="01"><b>This is an update of our new submissions to the advisory board</b>.</span><br />
 The next meeting we can submit to is <b>"""
-	subbody += str(datetime.datetime.strftime(meetingWB.cell(row=nextmeeting(), column=2).value, '%m/%d/%Y')) + "</b>, which means we must submit on <b>" + str(datetime.datetime.strftime(meetingWB.cell(row=nextmeeting(), column=1).value, '%m/%d/%Y'))
+	subbody += str(datetime.datetime.strftime(meetingWB.cell(row=nextmeeting(), column=1).value, '%m/%d/%Y')) + "</b>, which means we must submit on <b>" + str(datetime.datetime.strftime(meetingWB.cell(row=nextmeeting(), column=2).value, '%m/%d/%Y'))
 	subbody += """</b><br />
 If you have a job that is not listed that needs to be submitted, please email John or Gina so that it can be added to the list.<br />
-Please include the SO#, Job Name, Location, Contractor Name and Contractor Address.<br />
 If there is a problem with the target submission date, please let Gina or John know so the schedule can be adjusted.<br />
-If a submission number is needed, Gina or John will request it.<br />
 If a check and letter is needed, please see engineering for the drawing # and request the check and letter for your job.<br /><br /></p>
 """ 
 	for x in range (0, i):
@@ -77,6 +76,8 @@ If a check and letter is needed, please see engineering for the drawing # and re
 		subbody += "Contractor: " + str(newSubList(newSub)[x][1]) + "<br />"
 		if newSubList(newSub)[x][2] == None:
 			subbody += "Job: " + str(newSubList(newSub)[x][3]) + "<br />"
+		elif newSubList(newSub)[x][3] == None:
+			subbody += "Job: " + str(newSubList(newSub)[x][2]) + '<br />'
 		else:
 			subbody += "Job: " + str(newSubList(newSub)[x][2]) + " at " + str(newSubList(newSub)[x][3]) + "<br />"
 		if newSubList(newSub)[x][4] == None:
@@ -94,12 +95,35 @@ If a check and letter is needed, please see engineering for the drawing # and re
 		else:
 			subbody += "No target meeting set <br />"
 		subbody += "Salesman: " + str(newSubList(newSub)[x][9]) + "<br />"
-		subbody += "Engineer: " + str(newSubList(newSub)[x][8]) + '<br /><br />'
-	subbody += "</body></html>"
+		subbody += "Engineer: " + str(newSubList(newSub)[x][8]) + '<br />'
+		if newSubList(newSub)[x][12] == None or newSubList(newSub)[x][12].lower() != "yes":
+			subbody += "Not yet ready to submit<br />"
+		else: 
+			subbody =+ "READY TO SUBMIT<br />"
+		subbody += "<br />"
 	return subbody
 
-#Code below accesses any piece of the list of lists that i need.  First is list of lists index number, second is the inside list index number
-#print (newSubList(newSub)[0][1])
-
-#this code below for lookig up length of a list.  useful for looping
-#print(len(newSubList(newSub)[0]))
+#Take the email body from EmailNewSubBody and adds the data from Pending part of the workbook
+def EmailPendingSubBody():
+	i = len(pendingSubList(pendingSub))
+	subbody = EmailNewSubBody()
+	subbody += "<b>PENDING SUBMISSIONS BELOW</b><br /><br />"
+	for x in range (0,i):
+		subbody += "<b>SO#: " + str(pendingSubList(pendingSub)[x][0]) + "</b><br />"
+		subbody += "Contractor: " + str(pendingSubList(pendingSub)[x][1]) + "<br />"
+		if pendingSubList(pendingSub)[x][2] == None:
+			subbody += "Job " + str(pendingSubList(pendingSub)[x][3]) + '<br />'
+		elif pendingSubList(pendingSub)[x][3] == None:
+			subbody += "Job " + str(pendingSubList(pendingSub)[x][2]) + '<br />'
+		else:
+			subbody += "Job " + str(pendingSubList(pendingSub)[x][2]) + " at " + str(pendingSubList(pendingSub)[x][3]) + "<br />"
+		subbody += "Sub #: " + str(pendingSubList(pendingSub)[x][4]) + '<br />'
+		subbody += "Advisory Board Meeting Submitted: " + str(pendingSubList(pendingSub)[x][11]) + "<br />"
+		subbody += "Salesman: " + str(pendingSubList(pendingSub)[x][6]) + '<br />'
+		subbody += "Engineer: " + str(pendingSubList(pendingSub)[x][5]) + '<br />'
+		if pendingSubList(pendingSub)[x][8] == None or pendingSubList(pendingSub)[x][8].lower() != "yes":
+			subbody += "Not ready to resubmit yet<br />"
+		else:
+			subbody += "READY TO RESUBMIT<br />"
+		subbody += "<br /></body></html>"
+	return subbody
