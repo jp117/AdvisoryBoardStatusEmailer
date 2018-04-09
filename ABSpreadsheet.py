@@ -122,7 +122,7 @@ def EmailPendingSubBody():
 			else:
 				subbody += "Job " + str(pendingSubList(pendingSub)[x][2]) + " at " + str(pendingSubList(pendingSub)[x][3]) + "<br />"
 			subbody += "Sub #: " + str(pendingSubList(pendingSub)[x][4]) + '<br />'
-			subbody += "Advisory Board Meeting Submitted: " + str(pendingSubList(pendingSub)[x][11]) + "<br />"
+			subbody += "Advisory Board Meeting Submitted: " + str(pendingSubList(pendingSub)[x][10]) + "<br />"
 			subbody += "Salesman: " + str(pendingSubList(pendingSub)[x][6]) + '<br />'
 			subbody += "Engineer: " + str(pendingSubList(pendingSub)[x][5]) + '<br />'
 			if pendingSubList(pendingSub)[x][8] == None or pendingSubList(pendingSub)[x][8].lower() != "yes":
